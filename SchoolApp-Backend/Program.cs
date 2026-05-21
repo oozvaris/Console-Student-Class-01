@@ -1,4 +1,8 @@
 
+using DAL.Data;
+using DAL.Data.Interfaces;
+using SchoolApp_Backend.Services;
+
 namespace SchoolApp_Backend
 {
     public class Program
@@ -12,6 +16,11 @@ namespace SchoolApp_Backend
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
+
+
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
