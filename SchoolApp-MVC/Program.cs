@@ -1,6 +1,7 @@
-using DAL.Data;
-using DAL.Data.Interfaces;
-using SchoolApp_MVC.Services;
+
+
+using SchoolApp_MVC.ApiClients;
+using SchoolApp_MVC.ApiClients.Interfaces;
 
 namespace SchoolApp_MVC
 {
@@ -14,8 +15,13 @@ namespace SchoolApp_MVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IStudentService, StudentService>();
-            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            var banckendBaseUrl = builder.Configuration.GetValue<string>("BackendApi:BaseUrl") ?? "https://localhost:5206/";
+
+            builder.Services.AddHttpClient<IStudentApiClient, StudentApiClient>(client =>
+            {
+                client.BaseAddress = new Uri(banckendBaseUrl);
+            });
+
 
             var app = builder.Build();
 

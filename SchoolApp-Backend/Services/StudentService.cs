@@ -28,8 +28,15 @@ namespace SchoolApp_Backend.Services
             
         }
 
-        public async Task<bool> AddStudentAsync(Student student)
+        public async Task<bool> AddStudentAsync(StudentCreateDto studentCreateDto)
         {
+            var student = new Student
+            {
+                StudentName = studentCreateDto.StudentName,
+                StudentSurname = studentCreateDto.StudentSurname,
+                StudentEmail = studentCreateDto.StudentEmail
+            };
+
             int newStudentId = await _studentRepository.CreateAsync(student);
             Console.WriteLine($"New student added with ID: {newStudentId}");
             Console.WriteLine("------------------------------------------------");
@@ -45,8 +52,16 @@ namespace SchoolApp_Backend.Services
 
         }
 
-        public async Task<bool> UpdateStudentAsync(Student student)
+        public async Task<bool> UpdateStudentAsync(StudentUpdateDto studentUpdateDto)
         {
+            var student = new Student
+            {
+                StudentID = studentUpdateDto.StudentID,
+                StudentName = studentUpdateDto.StudentName,
+                StudentSurname = studentUpdateDto.StudentSurname,
+                StudentEmail = studentUpdateDto.StudentEmail
+            };
+
             var result = await _studentRepository.UpdateAsync(student);
 
             Console.WriteLine($"Student with ID {student.StudentID} has been updated.");
