@@ -27,66 +27,68 @@ namespace SchoolApp_MVC.Controllers
             return View(students);
         }
 
-        //public async Task<IActionResult> Details(int id)
-        //{
-        //    var student = await _studentService.FindStudentByIdAsync(id);
-        //    if (student == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(student);
-        //}
+        public async Task<IActionResult> Details(int id)
+        {
+            var student = await _studentApiClient.FindStudentByIdAsync(id);
+            if (student == null)
+            {
+                //return NotFound();
 
-        //public async Task<IActionResult> Edit(int id)
-        //{
-        //    var student = await _studentService.FindStudentByIdAsync(id);
-        //    if (student == null)
-        //    {
-        //        return NotFound();
-        //    }
+                return View("NotFound");
+            }
+            return View(student);
+        }
 
-        //    var studentUpdateDto = new StudentUpdateDto
-        //    {
-        //        StudentID = student.StudentID,
-        //        StudentName = student.StudentName,
-        //        StudentSurname = student.StudentSurname,
-        //        StudentEmail = student.StudentEmail
-        //    };
+        public async Task<IActionResult> Edit(int id)
+        {
+            var student = await _studentApiClient.FindStudentByIdAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(studentUpdateDto);
+            var studentUpdateDto = new StudentUpdateDto
+            {
+                StudentID = student.StudentID,
+                StudentName = student.StudentName,
+                StudentSurname = student.StudentSurname,
+                StudentEmail = student.StudentEmail
+            };
 
-        //}
+            return View(studentUpdateDto);
 
-        //[HttpPost]
-        //public async Task<IActionResult> Edit (int id, StudentUpdateDto studentUpdateDto)
-        //{
-        //    if (id != studentUpdateDto.StudentID)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(studentUpdateDto);
-        //    }
-        //    var studentToUpdate = new Student
-        //    {
-        //        StudentID = studentUpdateDto.StudentID,
-        //        StudentName = studentUpdateDto.StudentName,
-        //        StudentSurname = studentUpdateDto.StudentSurname,
-        //        StudentEmail = studentUpdateDto.StudentEmail
-        //    };
+        }
 
-        //    var result = await _studentService.UpdateStudentAsync(studentToUpdate);
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, StudentUpdateDto studentUpdateDto)
+        {
+            if (id != studentUpdateDto.StudentID)
+            {
+                return BadRequest();
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(studentUpdateDto);
+            }
+            var studentToUpdate = new StudentUpdateDto
+            {
+                StudentID = studentUpdateDto.StudentID,
+                StudentName = studentUpdateDto.StudentName,
+                StudentSurname = studentUpdateDto.StudentSurname,
+                StudentEmail = studentUpdateDto.StudentEmail
+            };
 
-        //    if (!result)
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Update operation failed.");
-        //        return View(studentUpdateDto);
-        //    }
+            var result = await _studentApiClient.UpdateAsync(studentToUpdate.StudentID, studentToUpdate);
 
-        //    TempData["SuccessMessage"] = "Student updated successfully.";
-        //    return RedirectToAction(nameof(Index));
-        //}
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelError(string.Empty, "Update operation failed.");
+                return View(studentUpdateDto);
+            }
+
+            TempData["SuccessMessage"] = "Student updated successfully.";
+            return RedirectToAction(nameof(Index));
+        }
 
         //public async Task<IActionResult> Delete(int id)
         //{
